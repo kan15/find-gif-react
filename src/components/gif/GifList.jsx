@@ -6,7 +6,7 @@ export const GifList = ({ gifs, error, isLoaded }) => {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (isLoaded) {
-    return < Spinner />;
+    return <Spinner />;
   } else {
     return (
       <div className="list-gifs">

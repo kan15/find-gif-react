@@ -1,36 +1,61 @@
 import React, { useState } from "react";
 import { Search } from "./../form/Search";
-import { fetchUrl } from "./../../api/fetchUrl";
+import { fetchUrl } from "../../api/fetchUrl";
 import "./GifsPage.css";
 import { GifList } from "./GifList";
 
 export const GifsPage = () => {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [gifs, setGifs] = useState([]);
-  const [userWord, setUserWord] = useState("");
+  const [requestResult, setRequestResult] = useState({
+    error: null,
+    isLoaded: false,
+    gifs: [],
+    userWord: "",
+  });
+
+  const setUserWord = (value) => {
+    setRequestResult((prevState) => ({
+      ...prevState,
+      userWord: value,
+    }));
+  };
 
   const showGif = () => {
-    fetch(fetchUrl.getFetchPostsUrl(userWord))
+    fetch(fetchUrl(requestResult.userWord))
       .then((res) => res.json())
       .then(
         (result) => {
-          setIsLoaded(true);
-          setTimeout(() => setIsLoaded(false), 1000);
-          setGifs(result.data);
-          setUserWord('');
+          setRequestResult((request) => {
+            return { ...request, isLoaded: true };
+          });
+          setTimeout(() => {
+            setRequestResult((request) => {
+              return { ...request, isLoaded: false };
+            });
+          }, 1000);
+          setRequestResult((request) => {
+            return { ...request, gifs: result.data, userWord: "" };
+          });
         },
         (error) => {
-          setIsLoaded(true);
-          setError(error);
+          setRequestResult((request) => {
+            return { ...request, isLoaded: true, error: error };
+          });
         }
       );
   };
 
   return (
-    <div>
-      <Search userWord={userWord} setUserWord={setUserWord} showGif={showGif} />
-      <GifList gifs={gifs} error={error} isLoaded={isLoaded} />
-    </div>
+    <>
+      <Search
+        userWord={requestResult.userWord}
+        onUserWordChange={setUserWord}
+        onSearchSubmitted={showGif}
+      />
+      <GifList
+        gifs={requestResult.gifs}
+        error={requestResult.error}
+        isLoaded={requestResult.isLoaded}
+      />
+    </>
   );
 };

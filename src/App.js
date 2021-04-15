@@ -1,12 +1,8 @@
-import React from 'react';
-import {GifsPage} from './components/gif/GifsPage';
+import React from "react";
+import { GifsPage } from "./components/gif/GifsPage";
 
 const App = () => {
-  return(
-    <div>
-      <GifsPage />
-    </div>
-  );
-}
+  return <GifsPage />;
+};
 
 export default App;

@@ -1,12 +1,12 @@
 import React from "react";
 
-export const Search = ({ userWord, setUserWord, showGif }) => {
+export const Search = ({ userWord, onUserWordChange, onSearchSubmitted }) => {
   const handleChange = (e) => {
-    setUserWord(e.target.value);
+    onUserWordChange(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    showGif();
+    onSearchSubmitted();
     e.preventDefault();
   };
 
