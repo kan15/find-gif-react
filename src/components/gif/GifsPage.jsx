@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Search } from "./../form/Search";
-import { fetchUrl } from "../../api/fetchUrl";
+import { getResult } from "../../api/getResult";
 import "./GifsPage.css";
 import { GifList } from "./GifList";
 
@@ -19,26 +19,24 @@ export const GifsPage = () => {
     }));
   };
 
+  const showHideSpinner = (value) => {
+    setRequestResult((prevState) => ({
+      ...prevState,
+      isLoaded: value
+    }));
+  }
+
   const showGif = () => {
-    fetch(fetchUrl(requestResult.userWord))
-      .then((res) => res.json())
+      getResult(requestResult.userWord)
       .then(
         (result) => {
           setRequestResult((request) => {
-            return { ...request, isLoaded: true };
-          });
-          setTimeout(() => {
-            setRequestResult((request) => {
-              return { ...request, isLoaded: false };
-            });
-          }, 1000);
-          setRequestResult((request) => {
-            return { ...request, gifs: result.data, userWord: "" };
+            return { ...request, gifs: result.data, isLoaded: false, userWord: "" };
           });
         },
         (error) => {
           setRequestResult((request) => {
-            return { ...request, isLoaded: true, error: error };
+            return { ...request, isLoaded: true, error: error};
           });
         }
       );
@@ -50,6 +48,7 @@ export const GifsPage = () => {
         userWord={requestResult.userWord}
         onUserWordChange={setUserWord}
         onSearchSubmitted={showGif}
+        showHideSpinner={showHideSpinner}
       />
       <GifList
         gifs={requestResult.gifs}
