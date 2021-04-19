@@ -10,10 +10,6 @@ export const GifsPage = () => {
   const [gifs, setGifs] = useState([]);
   const [userWord, setUserWord] = useState("");
 
-  const setSpinnerVisibility = (isVisible) => {
-    setIsLoading(isVisible);
-  };
-
   const showGif = () => {
     getResult(userWord).then(
       (result) => {
@@ -30,19 +26,17 @@ export const GifsPage = () => {
     );
   };
 
-  const showResult = () => {
-    setSpinnerVisibility(true);
-    showGif();
-  };
-
   return (
     <>
       <Search
         userWord={userWord}
         onUserWordChange={setUserWord}
-        onSearchSubmitted={showResult}
+        onSearchSubmitted={() => {
+          setIsLoading(true);
+          showGif();
+        }}
       />
-      <GifList
+      <GifList 
         gifs={gifs} 
         error={error} 
         isLoading={isLoading} 
