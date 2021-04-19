@@ -5,55 +5,47 @@ import "./GifsPage.css";
 import { GifList } from "./GifList";
 
 export const GifsPage = () => {
-  const [requestResult, setRequestResult] = useState({
-    error: null,
-    isLoaded: false,
-    gifs: [],
-    userWord: "",
-  });
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [gifs, setGifs] = useState([]);
+  const [userWord, setUserWord] = useState("");
 
-  const setUserWord = (value) => {
-    setRequestResult((prevState) => ({
-      ...prevState,
-      userWord: value,
-    }));
+  const setSpinnerVisibility = (isVisible) => {
+    setIsLoading(isVisible);
   };
 
-  const showHideSpinner = (value) => {
-    setRequestResult((prevState) => ({
-      ...prevState,
-      isLoaded: value
-    }));
-  }
-
   const showGif = () => {
-      getResult(requestResult.userWord)
-      .then(
-        (result) => {
-          setRequestResult((request) => {
-            return { ...request, gifs: result.data, isLoaded: false, userWord: "" };
-          });
-        },
-        (error) => {
-          setRequestResult((request) => {
-            return { ...request, isLoaded: true, error: error};
-          });
-        }
-      );
+    getResult(userWord).then(
+      (result) => {
+        setGifs(result.data);
+        setIsLoading(false);
+        setUserWord("");
+      },
+      (error) => {
+        setError(error);
+        setGifs([]);
+        setIsLoading(false);
+        setUserWord("");
+      }
+    );
+  };
+
+  const showResult = () => {
+    setSpinnerVisibility(true);
+    showGif();
   };
 
   return (
     <>
       <Search
-        userWord={requestResult.userWord}
+        userWord={userWord}
         onUserWordChange={setUserWord}
-        onSearchSubmitted={showGif}
-        showHideSpinner={showHideSpinner}
+        onSearchSubmitted={showResult}
       />
       <GifList
-        gifs={requestResult.gifs}
-        error={requestResult.error}
-        isLoaded={requestResult.isLoaded}
+        gifs={gifs} 
+        error={error} 
+        isLoading={isLoading} 
       />
     </>
   );

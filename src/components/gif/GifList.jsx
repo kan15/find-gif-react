@@ -2,11 +2,10 @@ import React from "react";
 import { GifItem } from "./GifItem";
 import { Spinner } from "./../spinner/Spinner";
 
-export const GifList = ({ gifs, error, isLoaded }) => {
-  console.log(error);
+export const GifList = ({ gifs, error, isLoading }) => {
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (isLoaded) {
+  } else if (isLoading) {
     return <Spinner />;
   } else {
     return (

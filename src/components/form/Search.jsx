@@ -1,12 +1,11 @@
 import React from "react";
 
-export const Search = ({ userWord, onUserWordChange, onSearchSubmitted, showHideSpinner }) => {
+export const Search = ({ userWord, onUserWordChange, onSearchSubmitted }) => {
   const handleChange = (e) => {
     onUserWordChange(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    showHideSpinner(true);
     onSearchSubmitted();
     e.preventDefault();
   };
